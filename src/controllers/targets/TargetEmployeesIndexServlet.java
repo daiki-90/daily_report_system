@@ -19,13 +19,13 @@ import utils.DBUtil;
  * Servlet implementation class TargetEmployeesIndex
  */
 @WebServlet("/target/index")
-public class TargetEmployeesIndex extends HttpServlet {
+public class TargetEmployeesIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TargetEmployeesIndex() {
+    public TargetEmployeesIndexServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,8 +34,15 @@ public class TargetEmployeesIndex extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // login_employee = ログインしている社員
+        // target_employee = report.employee.id 指定した社員
+        // reports = 特定の社員の日報取得
+        // follow = フォローしている社員がlogin_employee,フォローされている社員が指定した社員に当てはまるフィールドの数を取得
+        // followed = フォローしている社員がlogin_employee,フォローされている社員が指定した社員に当てはまるフィールドのを取得
+
         EntityManager em = DBUtil.createEntityManager();
 
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
         Employee target_employee =  em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
 
         int page;
@@ -55,12 +62,27 @@ public class TargetEmployeesIndex extends HttpServlet {
                 .setParameter("employee", target_employee)
                 .getSingleResult();
 
+        long follow = (long)em.createNamedQuery("checkFollowerAndFollowed",Long.class)
+                .setParameter("login_employee", login_employee)
+                .setParameter("target_employee", target_employee)
+                .getSingleResult();
+        if(follow != 0) {
+            Integer followed = (Integer)em.createNamedQuery("getSingleFollow", Integer.class)
+                    .setParameter("login_employee", login_employee)
+                    .setParameter("target_employee", target_employee)
+                    .getSingleResult();
+             request.setAttribute("followed", followed);
+        }
+
+
         em.close();
 
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
         request.setAttribute("target_employee", target_employee);
+        request.setAttribute("follow", follow);
+
 
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
