@@ -30,11 +30,11 @@
                         <c:out value="${i}" />&nbsp;
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='/?page=${i}' />"><c:out value="${i}" /></a>&nbsp;
+                        <a href="<c:url value='/followers/report/index?page=${i}' />"><c:out value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
         </div>
-        <p><a href="<c:url value='/index.html' />">トップページに戻る</a></p>
+        <p><a href="<c:url value='/' />">トップページに戻る</a></p>
     </c:param>
 </c:import>
