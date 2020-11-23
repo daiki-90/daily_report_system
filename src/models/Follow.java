@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @NamedQueries({
         @NamedQuery(
                 name = "getMyAllFollowers",
-                query = "SELECT f.followed_employee_id FROM Follow AS f WHERE f.follower_employee_id = :follower_employee_id ORDER BY f.id DESC"
+                query = "SELECT f.followed_employee_id FROM Follow AS f WHERE f.follower_employee_id = :login_employee ORDER BY f.id DESC"
                 ),
         @NamedQuery(
                 name = "checkFollowerAndFollowed",

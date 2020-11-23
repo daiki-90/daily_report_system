@@ -41,6 +41,7 @@ public class FollowServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
+        Integer target_id = (Integer)request.getSession().getAttribute("target_id");
 
         Follow f = new Follow();
 
@@ -53,7 +54,8 @@ public class FollowServlet extends HttpServlet {
         em.close();
         request.getSession().setAttribute("flush", "フォローしました。");
 
-        response.sendRedirect(request.getContextPath() + "/reports/index");
+        response.sendRedirect(request.getContextPath() + "/target/index?id=" + target_id);
+
     }
 
 }

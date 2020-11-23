@@ -34,16 +34,13 @@ public class TargetEmployeesIndexServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // login_employee = ログインしている社員
-        // target_employee = report.employee.id 指定した社員
-        // reports = 特定の社員の日報取得
-        // follow = フォローしている社員がlogin_employee,フォローされている社員が指定した社員に当てはまるフィールドの数を取得
-        // followed = フォローしている社員がlogin_employee,フォローされている社員が指定した社員に当てはまるフィールドのを取得
 
         EntityManager em = DBUtil.createEntityManager();
+        Integer target_id = Integer.parseInt(request.getParameter("id"));
 
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
         Employee target_employee =  em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
+
 
         int page;
         try{
@@ -71,7 +68,7 @@ public class TargetEmployeesIndexServlet extends HttpServlet {
                     .setParameter("login_employee", login_employee)
                     .setParameter("target_employee", target_employee)
                     .getSingleResult();
-             request.setAttribute("followed", followed);
+            request.setAttribute("followed", followed);
         }
 
 
@@ -82,6 +79,7 @@ public class TargetEmployeesIndexServlet extends HttpServlet {
         request.setAttribute("page", page);
         request.setAttribute("target_employee", target_employee);
         request.setAttribute("follow", follow);
+        request.getSession().setAttribute("target_id", target_id);
 
 
         if(request.getSession().getAttribute("flush") != null) {

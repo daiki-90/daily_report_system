@@ -32,6 +32,14 @@ import javax.persistence.Table;
     @NamedQuery(
             name = "getMyReportsCount",
             query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
+            ),
+    @NamedQuery(
+            name = "getMyFollowersReports",
+            query = "SELECT r FROM Report AS r, Follow AS f WHERE f.follower_employee_id = :employee AND r.employee = f.followed_employee_id ORDER BY r.id DESC"
+            ),
+    @NamedQuery(
+            name = "getMyFollowersReportsCount",
+            query = "SELECT COUNT(r) FROM Report AS r, Follow AS f WHERE f.follower_employee_id = :employee AND r.employee = f.followed_employee_id"
             )
 })
 @Entity
@@ -61,6 +69,8 @@ public class Report {
 
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
+
+
 
     public Integer getId() {
         return id;

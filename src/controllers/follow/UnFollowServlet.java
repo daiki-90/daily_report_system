@@ -40,6 +40,7 @@ public class UnFollowServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
+        Integer target_id = (Integer)request.getSession().getAttribute("target_id");
 
         Follow f = em.find(Follow.class, Integer.parseInt(request.getParameter("id")));
 
@@ -50,7 +51,7 @@ public class UnFollowServlet extends HttpServlet {
 
         request.getSession().setAttribute("flush", "アンフォローしました。");
 
-        response.sendRedirect(request.getContextPath() + "/reports/index");
+        response.sendRedirect(request.getContextPath() + "/target/index?id=" + target_id);
     }
 
 }
